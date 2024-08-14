@@ -38,15 +38,15 @@ std::string_view findLongestMatch(const char* searchBegin, const char* lookahead
   {
     if(*sCurs != *lCurs)
     {
+      //update longest & skip
+      updateLongest(sCurs);
+
       //cut first byte of search buffer
       ++searchBegin;
 
       //reset cursors
       lCurs = lookaheadBegin;
       sCurs = searchBegin;
-
-      //update longest & skip
-      updateLongest(sCurs);
       continue;
     }
 
