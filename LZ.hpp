@@ -65,7 +65,7 @@ std::string_view findLongestMatch(const char* searchBegin, const char* lookahead
 namespace LZ77
 {
 
-using Token = std::tuple<unsigned int, unsigned int, char>;
+using Token = std::tuple<unsigned short, unsigned short, char>;
 
 std::vector<Token> 
 Compress(std::string_view input, size_t searchSize=32768, size_t lookaheadSize=1024)
