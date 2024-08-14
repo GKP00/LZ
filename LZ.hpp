@@ -100,6 +100,32 @@ Compress(std::string_view input, size_t searchSize=32768, size_t lookaheadSize=1
   return compressed;
 }
 
+std::vector<unsigned char>
+Decompress(const std::vector<Token>& compressed)
+{
+  std::vector<unsigned char> decompressed;
+
+  for(const Token& token : compressed)
+  {
+    unsigned int pos = std::get<0>(token);
+    unsigned int len = std::get<1>(token);
+    unsigned char lit = std::get<2>(token);
+
+    if(!pos)
+    {
+      decompressed.push_back(lit);
+      continue;
+    }
+
+    auto decompressedSize = decompressed.size();
+
+    for(auto i = 0u; i < len; ++i)
+      decompressed.push_back( decompressed[ decompressedSize - pos + (i%len) ] );
+  }
+
+  return decompressed;
+}
+
 } //namespace: LZ77
 namespace LZ1 = LZ77;
 
