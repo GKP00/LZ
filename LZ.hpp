@@ -89,8 +89,12 @@ Compress(std::string_view input, size_t searchSize=32768, size_t lookaheadSize=1
 
     if(match.data())
     {
-      compressed.emplace_back(lookaheadBegin - match.data(), match.length(), '-');
-      i += match.length() - 1;
+      compressed.emplace_back(
+          lookaheadBegin - match.data(), 
+          match.length(), 
+          *(lookaheadBegin + match.length()) );
+
+      i += match.length();
       continue;
     }
 
@@ -107,9 +111,9 @@ Decompress(const std::vector<Token>& compressed)
 
   for(const Token& token : compressed)
   {
-    unsigned int pos = std::get<0>(token);
-    unsigned int len = std::get<1>(token);
-    unsigned char lit = std::get<2>(token);
+    auto pos = std::get<0>(token);
+    auto len = std::get<1>(token);
+    auto lit = std::get<2>(token);
 
     if(!pos)
     {
@@ -121,6 +125,8 @@ Decompress(const std::vector<Token>& compressed)
 
     for(auto i = 0u; i < len; ++i)
       decompressed.push_back( decompressed[ decompressedSize - pos + (i%len) ] );
+
+    decompressed.push_back(lit);
   }
 
   return decompressed;
